@@ -12,6 +12,20 @@
 
     components: { MainScreen },
 
+    head() {
+      return {
+        title: 'Andrey Shushunov — Senior Frontend Developer',
+        meta: [
+          {
+            hid: 'description',
+            name: 'description',
+            content:
+              'Andrey Shushunov is a Senior Frontend Developer based in Tbilisi specializing in modern web technologies and innovative solutions.',
+          },
+        ],
+      }
+    },
+
     data() {
       return {
         title: `Hi. I'm <span style="color: #ff490d;">Andrey Shushunov</span>`,
