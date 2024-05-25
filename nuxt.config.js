@@ -1,9 +1,14 @@
 export default {
+  srcDir: 'src/',
+  css: [
+    '~/assets/css/reset.css',
+    '~/assets/css/base.css'
+  ],
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'and-shu',
+    title: 'Портфолио. Андрей Шушунов',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'ru'
     },
     meta: [
       { charset: 'utf-8' },
@@ -12,13 +17,9 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: 'src/static/favicon.ico' }
     ]
   },
-
-  // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -36,6 +37,5 @@ export default {
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
-  }
+  build: {}
 }

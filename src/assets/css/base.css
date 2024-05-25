@@ -1,0 +1,28 @@
+:root {
+  --color-white-1: #fff;
+  --color-black-1: rgba(23, 23, 23, 0.95);
+  --color-yellow-1: #ff490d;
+}
+
+body {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.container {
+  max-width: 1430px;
+  width: 100%;
+  padding: 0 15px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1439px) {
+  .container {
+    max-width: 1260px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .container {
+    max-width: 100%;
+  }
+}
