@@ -13,6 +13,7 @@
       autoplay
       loop
       muted
+      aria-hidden="true"
       class="main-screen__background"
     ></video>
   </section>
@@ -80,6 +81,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    pointer-events: none;
     z-index: -1;
   }
 

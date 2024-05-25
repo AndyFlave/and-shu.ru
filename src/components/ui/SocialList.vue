@@ -35,14 +35,33 @@
 
 <style scoped>
   .social-list {
-    display: flex;
+    position: relative;
+    display: inline-flex;
     align-items: center;
     gap: 10px;
+  }
+
+  .social-list:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0px;
+    width: 100%;
+    height: 3px;
+    background-color: var(--color-yellow-1);
+    border-radius: 20px;
   }
 
   .social-list__item {
     overflow: hidden;
     border-radius: 12px;
+    filter: grayscale(1);
+    transition-property: filter;
+    transition-duration: 0.25s;
+  }
+
+  .social-list__item:hover {
+    filter: grayscale(0);
   }
 
   @media (max-width: 767px) {
@@ -50,6 +69,14 @@
       display: grid;
       justify-content: center;
       grid-template-columns: repeat(4, 52px);
+    }
+
+    .social-list:after {
+      content: none;
+    }
+
+    .social-list__item {
+      filter: grayscale(0);
     }
   }
 </style>
