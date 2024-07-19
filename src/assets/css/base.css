@@ -1,11 +1,24 @@
 :root {
   --color-white-1: #fff;
+  --color-white-2: #ececef;
   --color-black-1: rgba(23, 23, 23, 0.95);
+  --color-black-2: #232323;
   --color-yellow-1: #ff490d;
+  --color-green-1: #32cd32;
+
+  --duration-1: 0.25s;
 }
 
 body {
   font-family: 'Ubuntu', sans-serif;
+}
+
+body,
+html {
+  height: 100%;
+  color: #fff;
+  background-color: var(--color-black-2);
+  line-height: 1.25;
 }
 
 .container {
@@ -13,6 +26,10 @@ body {
   width: 100%;
   padding: 0 15px;
   margin: 0 auto;
+}
+
+.text-fill {
+  color: var(--color-yellow-1);
 }
 
 @media (max-width: 1439px) {

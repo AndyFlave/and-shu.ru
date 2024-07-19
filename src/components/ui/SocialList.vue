@@ -1,5 +1,9 @@
 <template>
-  <ul class="social-list">
+  <ul
+    class="social-list"
+    @mouseover="handleMouseOver($event)"
+    @mouseout="handleMouseOut()"
+  >
     <li class="social-list__item" v-for="net in nets" :key="net.src">
       <a
         :href="net.link"
@@ -28,6 +32,16 @@
         type: Array,
         required: true,
         default: () => [],
+      },
+    },
+
+    methods: {
+      handleMouseOver(event) {
+        console.log('Наведение на элемент: ', event)
+      },
+
+      handleMouseOut() {
+        console.log('Уход с элемента')
       },
     },
   }
@@ -68,7 +82,7 @@
     .social-list {
       display: grid;
       justify-content: center;
-      grid-template-columns: repeat(4, 52px);
+      grid-template-columns: repeat(3, 52px);
     }
 
     .social-list:after {
