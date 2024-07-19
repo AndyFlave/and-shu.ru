@@ -1,11 +1,13 @@
 <template>
   <section class="main-screen">
-    <div class="container">
+    <div class="container main-screen__container">
       <h1 class="main-screen__title" v-html="title"></h1>
 
-      <p v-if="subtitle" v-html="subtitle" class="main-screen__subtitle"></p>
-
-      <SocialList :nets="nets" class="main-screen__social-list" />
+      <div class="main-screen__content">
+        <p v-if="subtitle" v-html="subtitle" class="main-screen__subtitle"></p>
+        <NavigationList :routes="routes" class="main-screen__navigation-list" />
+        <SocialList :nets="nets" class="main-screen__social-list" />
+      </div>
     </div>
 
     <video
@@ -21,12 +23,15 @@
 
 <script>
   import SocialList from '@/components/ui/SocialList'
+  import NavigationList from '@/components/ui/NavigationList'
+  import navigations from '@/constants/navigations'
 
   export default {
     name: 'MainScreen',
 
     components: {
       SocialList,
+      NavigationList,
     },
 
     props: {
@@ -48,16 +53,38 @@
         default: () => [],
       },
     },
+
+    data() {
+      return {
+        routes: navigations.routes.slice(1),
+      }
+    },
   }
 </script>
 
 <style scoped>
   .main-screen {
     position: relative;
-    height: 100vh;
+    height: 100%;
     display: flex;
     align-items: center;
     padding: 30px 0 60px;
+  }
+
+  .main-screen:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-black-1);
+    z-index: 1;
+  }
+
+  .main-screen__container {
+    position: relative;
+    z-index: 2;
   }
 
   .main-screen__title {
@@ -71,7 +98,7 @@
   }
 
   .main-screen__social-list {
-    margin-top: 28px;
+    margin-top: 34px;
   }
 
   .main-screen__background {
@@ -82,7 +109,17 @@
     height: 100%;
     object-fit: cover;
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
+  }
+
+  .main-screen__content {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .main-screen__navigation-list {
+    margin-top: 22px;
   }
 
   @media (max-width: 767px) {
@@ -93,6 +130,10 @@
 
     .main-screen__subtitle {
       text-align: center;
+    }
+
+    .main-screen__content {
+      align-items: center;
     }
   }
 </style>

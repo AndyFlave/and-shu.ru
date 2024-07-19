@@ -1,26 +1,40 @@
 <template>
   <header class="header">
     <div class="container">
-      <Logotype />
+      <NavigationList :routes="routes" />
     </div>
   </header>
 </template>
 
 <script>
   import Logotype from '@/components/ui/Logotype'
+  import NavigationList from '@/components/ui/NavigationList'
+  import navigations from '@/constants/navigations'
 
   export default {
     name: 'Header',
 
     components: {
-      Logotype
+      Logotype,
+      NavigationList,
+    },
+
+    data() {
+      return {
+        routes: navigations.routes,
+      }
     },
   }
 </script>
 
 <style scoped>
   .header {
-    padding: 20px 0;
-    background-color: #2F2F2F;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--color-white-2);
+  }
+
+  .header::v-deep .navigation-list__unit {
+    width: 70px;
+    height: 70px;
   }
 </style>

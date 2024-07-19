@@ -28,8 +28,8 @@
 
     data() {
       return {
-        title: `Hi. I'm <span style="color: #ff490d;">Andrey Shushunov</span>`,
-        subtitle: `I'm <span style="color: #ff490d;">Senior Frontend Engineer</span> based in Tbilisi. <br> Welcome on my personal website.`,
+        title: `Hi. I'm <span class="text-fill">Andrey Shushunov</span>`,
+        subtitle: `I'm <span class="text-fill">Senior Frontend Engineer</span> based in Tbilisi. <br> Welcome on my personal website.`,
         nets: [
           {
             icon: require('@/static/images/svg/linkedin.svg'),
@@ -59,13 +59,13 @@
             rel: 'nofollow noreferer',
             target: '_blank',
           },
-          {
-            link: 'https://ok.ru/shushunovandrey',
-            icon: require('@/static/images/svg/ok.svg'),
-            alt: 'Одноклассники frontend-разработчика Андрея Шушунова',
-            rel: 'nofollow noreferer',
-            target: '_blank',
-          },
+          // {
+          //   link: 'https://ok.ru/shushunovandrey',
+          //   icon: require('@/static/images/svg/ok.svg'),
+          //   alt: 'Одноклассники frontend-разработчика Андрея Шушунова',
+          //   rel: 'nofollow noreferer',
+          //   target: '_blank',
+          // },
           {
             link: 'https://vk.com/shushunov_aa',
             icon: require('@/static/images/svg/vk.svg'),
@@ -91,6 +91,7 @@
 
 <style scoped>
   .index-page {
+    height: 100%;
   }
 
   .index-page__title {

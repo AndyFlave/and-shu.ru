@@ -1,6 +1,7 @@
 <template>
-  <div class="app template-default">
-    <main class="template-default__main">
+  <div class="app template-fullpage">
+    <Header />
+    <main>
       <Nuxt />
     </main>
   </div>
@@ -17,12 +18,6 @@
 </script>
 
 <style scoped>
-  .template-default {
-    height: 100vh;
-    height: calc(var(--vh, 1vh) * 100);
-  }
-
-  .template-default__main {
-    height: 100%;
+  .template-fullpage {
   }
 </style>

@@ -13,9 +13,7 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: 'src/static/favicon.ico' },
-    ],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
 
     script: [
       {
@@ -44,7 +42,7 @@ export default {
   },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~/plugins/vhFix.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
