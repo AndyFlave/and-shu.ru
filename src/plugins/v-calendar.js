@@ -1,4 +1,4 @@
-// import Vue from 'vue'
-// import VCalendar from 'v-calendar'
+import Vue from 'vue'
+import VCalendar from 'v-calendar'
 
-// Vue.use(VCalendar)
+Vue.use(VCalendar)
