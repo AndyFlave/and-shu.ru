@@ -5,9 +5,10 @@
         <h1 class="timeline-page__title">Lifetime Timeline Visualization</h1>
         <p class="timeline-page__subtitle">
           Lifetime visualization <br />
-          Each cell represents one week. There are 52 weeks in each row, which
-          equals 1 year. <br />
-          Past weeks are painted in orange. Current week is marked in green
+          Each cell represents one week, with 52 weeks in each row, equaling one
+          year. <br />
+          Past weeks are shown in orange, and the current week is marked in
+          green.
         </p>
 
         <TimeLineForm
@@ -37,12 +38,26 @@
 
   export default {
     name: 'TimeLinePage',
-
     layout: 'fullpage',
 
     components: {
       TimeLine,
       TimeLineForm,
+    },
+
+    head() {
+      return {
+        title:
+          "Lifetime Visualization Service by Andrey Shushunov - Track Your Life's Journey",
+        meta: [
+          {
+            hid: 'description',
+            name: 'description',
+            content:
+              'Discover how much time you have left with our Lifetime Visualization tool. Enter your birth year and desired lifespan to generate a unique timeline. See your life in percentages and a progress bar widget. Perfect for tracking life, understanding the brevity of existence, and answering questions like "How much time do I have left?" or "How can I track my life in percentages?" Start visualizing your life\'s journey today and embrace the concept of "memento mori" | Personal website of Andrey Shushunov',
+          },
+        ],
+      }
     },
 
     data() {

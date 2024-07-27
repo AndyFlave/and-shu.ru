@@ -10,7 +10,7 @@
           Date of birth: <span class="bold">{{ date }}</span>
         </li>
         <li class="time-line-form__item">
-          Years of live: <span class="bold">{{ yearsOfLife }}</span>
+          Expected lifespan: <span class="bold">{{ yearsOfLife }}</span>
         </li>
         <li class="time-line-form__item">
           Lived vs. Remaining Life (%):
