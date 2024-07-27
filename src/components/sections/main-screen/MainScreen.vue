@@ -15,6 +15,8 @@
       autoplay
       loop
       muted
+      playsinline
+      disablePictureInPicture
       aria-hidden="true"
       class="main-screen__background"
     ></video>
@@ -69,6 +71,7 @@
     display: flex;
     align-items: center;
     padding: 30px 0 60px;
+    z-index: 1;
   }
 
   .main-screen:before {
@@ -109,7 +112,19 @@
     height: 100%;
     object-fit: cover;
     pointer-events: none;
-    z-index: 0;
+    z-index: -1;
+  }
+
+  .main-screen__background::-webkit-media-controls {
+    display: none !important;
+  }
+
+  .main-screen__background::-moz-media-controls {
+    display: none !important;
+  }
+
+  .main-screen__background::media-controls {
+    display: none !important;
   }
 
   .main-screen__content {
