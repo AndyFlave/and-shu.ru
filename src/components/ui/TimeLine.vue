@@ -1,9 +1,5 @@
 <template>
   <div>
-    <h1>
-      {{ birthDate }}
-    </h1>
-
     <div class="time-line">
       <span
         v-for="(week, index) in weeks"
@@ -202,6 +198,26 @@
     }
     100% {
       transform: scale(8);
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .time-line__week {
+      width: 5px;
+      height: 5px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .time-line__week {
+      width: 4px;
+    }
+  }
+
+  @media (max-width: 425px) {
+    .time-line__week {
+      width: 3px;
+      height: 4px;
     }
   }
 </style>

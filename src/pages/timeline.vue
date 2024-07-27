@@ -10,45 +10,30 @@
           Past weeks are painted in orange. Current week is marked in green
         </p>
 
-        <div>
-          <ul>
-            <li>My lifetime: {{ name }}</li>
-            <li>Date of birth: {{ date }}</li>
-            <li>Years of live: {{ yearsOfLife }}</li>
-            <li v-if="lifePercentage">
-              Lived vs. Remaining Life (%):
-              <span class="yellow">{{ lifePercentage.lived }}</span> /
-              <span class="green">{{ lifePercentage.remaining }}</span>
-            </li>
-          </ul>
-        </div>
-
-        <BaseButton @click="openPanel()" class="timeline-page__panel-trigger">
-          {{ isOpenPanel ? 'Fill the folowing fields:' : 'TRY' }}
-        </BaseButton>
-
-        <div v-if="isOpenPanel" class="panel">
-          <input type="text" placeholder="Your name" class="panel__input" />
-          <input type="date" @change="change($event)" class="panel__input" />
-
-          <BaseButton @click="closePanel()" class="panel__button">
-            OK
-          </BaseButton>
-        </div>
+        <TimeLineForm
+          :name="name"
+          :date="date"
+          :yearsOfLife="yearsOfLife"
+          :lifePercentage="lifePercentage"
+          :isMyGraph="isMyGraph"
+          @change="change($event)"
+          @selected="selected($event)"
+        />
       </div>
 
       <TimeLine
         :birth-date="date"
         :years-of-life="yearsOfLife"
-        @life-percentage="test($event)"
+        class="timeline-page__unit"
+        @life-percentage="updatePercentageLife($event)"
       />
     </div>
   </div>
 </template>
 
 <script>
-  import BaseButton from '@/components/ui/base/BaseButton'
   import TimeLine from '@/components/ui/TimeLine'
+  import TimeLineForm from '@/components/ui/TimeLineForm'
 
   export default {
     name: 'TimeLinePage',
@@ -56,8 +41,8 @@
     layout: 'fullpage',
 
     components: {
-      BaseButton,
       TimeLine,
+      TimeLineForm,
     },
 
     data() {
@@ -66,25 +51,19 @@
         date: '1994-02-26',
         yearsOfLife: 80,
         lifePercentage: null,
-        isOpenPanel: false,
+        isMyGraph: true,
       }
     },
 
     methods: {
-      change(event) {
-        this.date = event.target.value
-        console.log('this.date: ', this.date)
+      selected(event) {
+        this.date = event.date
+        this.yearsOfLife = event.yearsOfLife
+
+        this.isMyGraph = false
       },
 
-      openPanel() {
-        this.isOpenPanel = true
-      },
-
-      closePanel() {
-        this.isOpenPanel = false
-      },
-
-      test(event) {
+      updatePercentageLife(event) {
         this.lifePercentage = event
       },
     },
@@ -102,27 +81,39 @@
     gap: 30px;
   }
 
-  .timeline-page__panel-trigger {
-    margin-bottom: 20px;
+  .timeline-page__title {
+    font-size: 48px;
   }
 
-  .panel {
-    display: grid;
-    gap: 8px;
+  .timeline-page__subtitle {
+    margin-top: 16px;
+    margin-bottom: 12px;
+    line-height: 1.4;
   }
 
-  .panel__input {
-    padding: 8px 12px;
+  .timeline-page__unit {
+    max-width: 420px;
   }
 
-  .panel__button {
-    margin-top: 8px;
+  @media (max-width: 1199px) {
+    .timeline-page {
+      padding: 32px 0;
+    }
+
+    .timeline-page__container {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .timeline-page__title {
+      font-size: 36px;
+    }
   }
 
-  .yellow {
-    color: var(--color-yellow-1);
-  }
-  .green {
-    color: var(--color-green-1);
+  @media (max-width: 1199px) {
+    .timeline-page__title {
+      font-size: 30px;
+    }
   }
 </style>

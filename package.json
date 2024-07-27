@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "core-js": "^3.19.3",
-    "date-fns": "^3.6.0",
     "nuxt": "^2.15.8",
     "v-calendar": "^2.4.2",
     "vue": "^2.6.14",
