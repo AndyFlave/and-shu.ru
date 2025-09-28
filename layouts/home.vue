@@ -1,5 +1,6 @@
 <template>
   <div class="home-layout">
+    <SpaceBackground :enabled="true" :fullscreen="true" />
     <LayoutHeader />
     <main class="main-content">
       <slot />

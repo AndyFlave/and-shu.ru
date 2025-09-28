@@ -1,5 +1,6 @@
 <template>
   <div class="layout">
+    <SpaceBackground :enabled="false" />
     <LayoutHeader />
     <main class="main-content">
       <slot />
