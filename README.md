@@ -1,75 +1,69 @@
-# Nuxt Minimal Starter
+# and-shu.ru
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Личный сайт. Nuxt 4, SPA static (`ssr: false` + `nitro.preset = 'static'`),
+Tailwind v4, @nuxt/ui v4. Деплоится на Sprinthost через GitHub Actions + rsync.
 
-## Setup
-
-Make sure to install dependencies:
+## Локальная разработка
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
 yarn install
-
-# bun
-bun install
+yarn dev          # http://localhost:3000
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+Прочие скрипты:
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+yarn generate     # статический билд в .output/public
+yarn preview      # локальный предпросмотр сборки
+yarn typecheck    # vue-tsc
 ```
 
-## Production
+## Архитектура
 
-Build the application for production:
+- **`pages/`** — `/` (главная), `/timeline`, `/privacy`.
+- **`components/`** — `CookieBanner.vue`, `SpaceBackground.vue`, секции главной
+  (`pages/index/components/`), `layout/Header.vue`, `layout/Footer.vue`.
+- **`composables/`** — `useCookieConsent` (управление согласием),
+  `useInstallPrompt` (PWA-установка), `useLifeWeeks` / `useLifeWeeksSettings`
+  (виджет «жизнь в неделях»).
+- **`plugins/yandex-metrika.client.ts`** — Метрика 92329310, грузится лениво
+  только после согласия cookie, SPA-трекинг через `router.afterEach`.
+- **`public/.htaccess`** — SPA fallback и кэширование, защита папок поддоменов.
 
-```bash
-# npm
-npm run build
+Серверных рантайм-зависимостей нет: всё работает как статический SPA.
 
-# pnpm
-pnpm build
+## Деплой
 
-# yarn
-yarn build
+Push в `main` → GitHub Actions запускает workflow
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml):
 
-# bun
-bun run build
-```
+1. `yarn install` (workflow использует `npm install` для скорости).
+2. `npm run generate`.
+3. `rsync -avz --delete .output/public/ → Sprinthost`.
 
-Locally preview production build:
+### Требуемые GitHub-переменные и секреты
 
-```bash
-# npm
-npm run preview
+В **Settings → Secrets and variables → Actions** репозитория добавить:
 
-# pnpm
-pnpm preview
+- **Secrets**
+  - `SSH_PRIVATE_KEY` — приватный SSH-ключ для пользователя `a0435840` на Sprinthost
+    (publickey ключа должен быть в `~/.ssh/authorized_keys` на сервере).
+- **Variables**
+  - `DEPLOY_PATH` — например, `/home/a0435840/domains/and-shu.ru/public_html/`.
 
-# yarn
-yarn preview
+### Что НЕ удаляется при деплое (`--exclude` в rsync)
 
-# bun
-bun run preview
-```
+Папки поддоменов на сервере (`wishlist/`, `sites/`, `soundstorm-map/`,
+`bodyfolio/`), служебные `cgi-bin/`, `.well-known/`, `logs/`, `tmp/`.
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+⚠️ **Важно**: если на сервере появится новый поддомен в общем `public_html`,
+обязательно добавить его и в `--exclude` workflow, и в `RewriteRule ^…` в
+`public/.htaccess`, иначе `rsync --delete` сотрёт его файлы.
+
+## Аналитика и cookie
+
+- Метрика инициализируется только после нажатия «Принять» в баннере.
+- Согласие хранится в `localStorage` под ключом
+  `and-shu:cookie-consent:v1` (`accepted` / `declined`).
+- Для повторного теста баннера: `localStorage.removeItem('and-shu:cookie-consent:v1')`
+  → перезагрузка.

@@ -1,29 +1,37 @@
 <template>
-  <footer class="footer">
-    <div class="container">
-      <p>&copy; 2025 My Project. All rights reserved.</p>
-    </div>
-  </footer>
+  <UFooter>
+    <template #left>
+      <p class="text-sm text-muted">
+        © {{ new Date().getFullYear() }} and-shu.ru
+      </p>
+    </template>
+
+    <UNavigationMenu :items="items" variant="link" class="hidden md:flex" />
+
+    <template #right>
+      <UButton
+        icon="i-simple-icons-github"
+        color="neutral"
+        variant="ghost"
+        to="https://github.com/shushunov-andrey"
+        target="_blank"
+        rel="nofollow noreferrer"
+        aria-label="GitHub"
+      />
+    </template>
+  </UFooter>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
 defineOptions({
   name: 'LayoutFooter',
 })
+
+const items: NavigationMenuItem[] = [
+  { label: 'Главная', to: '/' },
+  { label: 'Таймлайн', to: '/timeline' },
+  { label: 'Политика конфиденциальности', to: '/privacy' },
+]
 </script>
-
-<style scoped>
-.footer {
-  background-color: #333;
-  color: white;
-  padding: 1.5rem 0;
-  margin-top: auto;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-  text-align: center;
-}
-</style>

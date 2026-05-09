@@ -1,2 +1,5 @@
-User-Agent: *
+User-agent: *
+Allow: /
 Disallow:
+
+Sitemap: https://and-shu.ru/sitemap.xml

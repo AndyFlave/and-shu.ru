@@ -1,99 +1,57 @@
 <template>
-  <header class="header">
-    <div class="container">
-      <h1 class="logo">My Project</h1>
-      <nav class="navigation">
-        <ul>
-          <li><NuxtLink to="/">Home</NuxtLink></li>
-          <li><NuxtLink to="/timeline">Timeline</NuxtLink></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <UHeader title="and-shu.ru" to="/" mode="drawer">
+    <UNavigationMenu :items="items" class="hidden md:flex" />
+
+    <template #right>
+      <UButton
+        v-if="canInstall"
+        icon="i-lucide-download"
+        color="primary"
+        variant="subtle"
+        size="sm"
+        :label="installLabel"
+        :square="!installLabel"
+        :aria-label="installLabel ? undefined : 'Установить приложение'"
+        @click="onInstall"
+      />
+    </template>
+
+    <template #body>
+      <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5 md:hidden" />
+    </template>
+  </UHeader>
 </template>
 
-<script setup>
-  defineOptions({
-    name: 'LayoutHeader',
-  })
+<script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
+defineOptions({
+  name: 'LayoutHeader',
+})
+
+const route = useRoute()
+const { canInstall, install } = useInstallPrompt()
+
+// Tailwind sm = 640px. На мобиле — иконка-only, на sm+ — с лейблом.
+const isSmUp = useMediaQuery('(min-width: 640px)')
+const installLabel = computed(() => (isSmUp.value ? 'Установить' : undefined))
+
+const items = computed<NavigationMenuItem[]>(() => [
+  {
+    label: 'Главная',
+    to: '/',
+    icon: 'i-lucide-house',
+    active: route.path === '/',
+  },
+  {
+    label: 'Таймлайн',
+    to: '/timeline',
+    icon: 'i-lucide-history',
+    active: route.path.startsWith('/timeline'),
+  },
+])
+
+const onInstall = async () => {
+  await install()
+}
 </script>
-
-<style lang="scss" scoped>
-  .header {
-    position: relative;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .logo {
-    margin: 0;
-    font-size: 3rem;
-    font-weight: bold;
-    color: white;
-    text-shadow: 0 0 20px rgba(100, 200, 255, 0.5);
-    background: linear-gradient(45deg, #ffffff, #a0c4ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .navigation ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .navigation li {
-    margin-left: 2rem;
-  }
-
-  .navigation a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    text-shadow: 0 0 10px rgba(100, 200, 255, 0.3);
-  }
-
-  .navigation a:hover,
-  .navigation a.router-link-active {
-    background: rgba(100, 200, 255, 0.2);
-    box-shadow: 0 0 20px rgba(100, 200, 255, 0.3);
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 768px) {
-    .container {
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .logo {
-      font-size: 2rem;
-    }
-
-    .navigation li {
-      margin-left: 1rem;
-    }
-
-    .navigation a {
-      font-size: 1rem;
-    }
-  }
-</style>

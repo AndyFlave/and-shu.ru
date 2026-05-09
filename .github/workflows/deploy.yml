@@ -1,0 +1,49 @@
+name: Deploy to Sprinthost
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Generate static site
+        run: yarn generate
+
+      - name: Deploy via rsync
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          # ВАЖНО: --exclude поддоменов обязателен — иначе --delete сотрёт их с сервера.
+          switches: >-
+            -avz --delete
+            --exclude='wishlist/'
+            --exclude='sites/'
+            --exclude='soundstorm-map/'
+            --exclude='bodyfolio/'
+            --exclude='cgi-bin/'
+            --exclude='.well-known/'
+            --exclude='logs/'
+            --exclude='tmp/'
+          path: .output/public/
+          remote_path: ${{ vars.DEPLOY_PATH }}
+          remote_host: a0435840.xsph.ru
+          remote_user: a0435840
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}

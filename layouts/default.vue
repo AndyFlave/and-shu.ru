@@ -1,23 +1,23 @@
 <template>
-  <div class="layout">
-    <SpaceBackground :enabled="false" />
+  <div
+    class="relative flex min-h-dvh flex-col bg-default"
+    :class="{ 'overflow-hidden': overflowHidden }"
+  >
+    <SpaceBackground :enabled="true" :fullscreen="true" />
     <LayoutHeader />
-    <main class="main-content">
+
+    <UMain class="relative z-10" :class="{ 'py-8': mainPadding }">
       <slot />
-    </main>
+    </UMain>
+
     <LayoutFooter />
+
+    <CookieBanner />
   </div>
 </template>
 
-<style scoped>
-.layout {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.main-content {
-  flex: 1;
-  padding: 2rem 0;
-}
-</style>
+<script setup lang="ts">
+const route = useRoute()
+const mainPadding = computed(() => route.meta.mainPadding !== false)
+const overflowHidden = computed(() => route.meta.overflowHidden === true)
+</script>
