@@ -37,28 +37,53 @@ yarn typecheck    # vue-tsc
 Push в `main` → GitHub Actions запускает workflow
 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml):
 
-1. `yarn install` (workflow использует `npm install` для скорости).
-2. `npm run generate`.
-3. `rsync -avz --delete .output/public/ → Sprinthost`.
+1. `corepack enable` + `yarn install --immutable`.
+2. `yarn generate` → `.output/public/`.
+3. SSH-keygen, `scp` `~/.deploy-excludes` с сервера.
+4. `rsync -avz --delete --exclude-from=.deploy-excludes` на Sprinthost.
 
-### Требуемые GitHub-переменные и секреты
+### Настройка GitHub (один раз)
 
 В **Settings → Secrets and variables → Actions** репозитория добавить:
 
 - **Secrets**
-  - `SSH_PRIVATE_KEY` — приватный SSH-ключ для пользователя `a0435840` на Sprinthost
-    (publickey ключа должен быть в `~/.ssh/authorized_keys` на сервере).
+  - `SSH_PRIVATE_KEY` — приватный SSH-ключ (см. ниже как сгенерировать).
 - **Variables**
-  - `DEPLOY_PATH` — например, `/home/a0435840/domains/and-shu.ru/public_html/`.
+  - `DEPLOY_PATH` — `/home/a0435840/domains/and-shu.ru/public_html/`.
 
-### Что НЕ удаляется при деплое (`--exclude` в rsync)
+### Настройка Sprinthost (один раз)
 
-Папки поддоменов на сервере (`wishlist/`, `sites/`, `soundstorm-map/`,
-`bodyfolio/`), служебные `cgi-bin/`, `.well-known/`, `logs/`, `tmp/`.
+1. **SSH-ключ.** Сгенерировать пару (или использовать существующую):
 
-⚠️ **Важно**: если на сервере появится новый поддомен в общем `public_html`,
-обязательно добавить его и в `--exclude` workflow, и в `RewriteRule ^…` в
-`public/.htaccess`, иначе `rsync --delete` сотрёт его файлы.
+   ```bash
+   ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/and-shu-deploy
+   # → ~/and-shu-deploy (private), ~/and-shu-deploy.pub (public)
+   ```
+
+   Публичный ключ дописать в `~/.ssh/authorized_keys` на сервере
+   (через ISP-панель Sprinthost или по существующему SSH-доступу).
+   Приватный — скопировать целиком (включая `-----BEGIN/END-----`)
+   в GitHub Secret `SSH_PRIVATE_KEY`.
+
+2. **Список исключений на сервере.** Это критично: без него `rsync --delete`
+   сотрёт чужие поддомены. Создать `~/.deploy-excludes`:
+
+   ```
+   bodyfolio/
+   sites/
+   soundstorm-map/
+   wishlist/
+   cgi-bin/
+   .well-known/
+   logs/
+   tmp/
+   ```
+
+   При появлении нового поддомена в `public_html/` — **просто добавить
+   строку в этот файл на сервере**, никаких правок репо/workflow не нужно.
+
+   Если файла на сервере нет, workflow остановится с ошибкой
+   `~/.deploy-excludes не найден на сервере` — это намеренная защита.
 
 ## Аналитика и cookie
 

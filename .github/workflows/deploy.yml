@@ -5,19 +5,23 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  REMOTE_HOST: a0435840.xsph.ru
+  REMOTE_USER: a0435840
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Enable Corepack
         run: corepack enable
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: yarn
@@ -28,22 +32,35 @@ jobs:
       - name: Generate static site
         run: yarn generate
 
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$REMOTE_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Fetch deploy excludes from server
+        # Список того, что rsync НЕ должен трогать (поддомены, служебные папки).
+        # Лежит на сервере в ~/.deploy-excludes — позволяет добавлять новые
+        # поддомены без правки workflow. Если файла нет — деплой ОСТАНОВЛЕН
+        # для безопасности (--delete мог бы стереть чужие поддомены).
+        run: |
+          set -e
+          ssh -i ~/.ssh/id_ed25519 "$REMOTE_USER@$REMOTE_HOST" \
+            "test -f ~/.deploy-excludes" \
+            || { echo "::error::~/.deploy-excludes не найден на сервере. Создайте файл со списком исключений (см. README) и перезапустите деплой."; exit 1; }
+          scp -i ~/.ssh/id_ed25519 \
+            "$REMOTE_USER@$REMOTE_HOST:~/.deploy-excludes" \
+            ./.deploy-excludes
+          echo "=== Excludes ==="
+          cat ./.deploy-excludes
+          echo "================"
+
       - name: Deploy via rsync
-        uses: burnett01/rsync-deployments@7.0.1
-        with:
-          # ВАЖНО: --exclude поддоменов обязателен — иначе --delete сотрёт их с сервера.
-          switches: >-
-            -avz --delete
-            --exclude='wishlist/'
-            --exclude='sites/'
-            --exclude='soundstorm-map/'
-            --exclude='bodyfolio/'
-            --exclude='cgi-bin/'
-            --exclude='.well-known/'
-            --exclude='logs/'
-            --exclude='tmp/'
-          path: .output/public/
-          remote_path: ${{ vars.DEPLOY_PATH }}
-          remote_host: a0435840.xsph.ru
-          remote_user: a0435840
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          rsync -avz --delete \
+            --exclude-from=./.deploy-excludes \
+            -e "ssh -i ~/.ssh/id_ed25519" \
+            ./.output/public/ \
+            "$REMOTE_USER@$REMOTE_HOST:${{ vars.DEPLOY_PATH }}"
