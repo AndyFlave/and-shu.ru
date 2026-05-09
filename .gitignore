@@ -9,6 +9,11 @@ dist
 # Node dependencies
 node_modules
 
+# Yarn 4 (node-modules linker): cache и install-state регенерируются при install
+.yarn/cache
+.yarn/install-state.gz
+.pnp.*
+
 # Logs
 logs
 *.log
