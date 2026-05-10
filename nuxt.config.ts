@@ -21,6 +21,7 @@ export default defineNuxtConfig({
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width,initial-scale=1' },
         { name: 'format-detection', content: 'telephone=no' },
+        { name: 'yandex-verification', content: '557f48d6fd4c99e2' },
         {
           name: 'description',
           content:
