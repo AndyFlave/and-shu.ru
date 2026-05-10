@@ -4,9 +4,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/ui'],
 
-  // SSR включён, чтобы поисковые боты получали полноценный HTML.
-  // nitro.preset = 'static' + prerender.routes — Nuxt рендерит каждый маршрут
-  // в HTML на этапе билда, на клиенте идёт обычная гидрация.
   nitro: {
     preset: 'static',
     prerender: {

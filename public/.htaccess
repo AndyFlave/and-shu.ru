@@ -1,8 +1,3 @@
-# SPA fallback для Nuxt static.
-# Все маршруты, не указывающие на существующий файл/директорию,
-# отдают 200.html — клиентский роутер сам обработает путь.
-# 200.html генерируется Nuxt'ом автоматически (копия shell-HTML).
-
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /

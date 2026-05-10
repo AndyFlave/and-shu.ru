@@ -146,13 +146,48 @@ definePageMeta({
   mainPadding: false,
 })
 
+const seoTitle = 'Жизнь в неделях — карта прожитых недель и memento mori'
+const seoDescription =
+  'Карта жизни в неделях: введите дату рождения и увидите все прожитые и оставшиеся недели. Визуализация memento mori — простой способ почувствовать ценность времени.'
+const ogDescription =
+  'Каждая клетка — одна неделя жизни. Прожитые закрашены, текущая выделена. Memento mori как карта времени.'
+const pageUrl = 'https://and-shu.ru/timeline'
+
 useHead({
-  title: 'Таймлайн — Жизнь в неделях | and-shu.ru',
+  title: seoTitle,
   meta: [
+    { name: 'description', content: seoDescription },
     {
-      name: 'description',
+      name: 'keywords',
       content:
-        'Memento mori: визуализация жизни в неделях. Введите свою дату рождения и получите свою карту времени.',
+        'жизнь в неделях, memento mori, мементо мори, карта жизни в неделях, прожитые недели, визуализация жизни, годы жизни в неделях, сколько недель в жизни',
+    },
+    { property: 'og:title', content: 'Жизнь в неделях — memento mori' },
+    { property: 'og:description', content: ogDescription },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: pageUrl },
+    { property: 'og:locale', content: 'ru_RU' },
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: 'Жизнь в неделях — memento mori' },
+    { name: 'twitter:description', content: ogDescription },
+  ],
+  link: [{ rel: 'canonical', href: pageUrl }],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebApplication',
+        name: 'Жизнь в неделях',
+        alternateName: 'Memento mori — карта времени',
+        description: seoDescription,
+        url: pageUrl,
+        inLanguage: 'ru',
+        applicationCategory: 'LifestyleApplication',
+        operatingSystem: 'Any',
+        isAccessibleForFree: true,
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'RUB' },
+      }),
     },
   ],
 })
