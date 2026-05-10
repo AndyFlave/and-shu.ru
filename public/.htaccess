@@ -1,12 +1,7 @@
-# SPA fallback для Nuxt static (ssr: false)
+# SPA fallback для Nuxt static.
 # Все маршруты, не указывающие на существующий файл/директорию,
 # отдают 200.html — клиентский роутер сам обработает путь.
-#
-# 200.html — это копия index.html, генерируется Nuxt'ом автоматически.
-# Конвенция (Surge.sh, Nuxt static): отдаём shell с HTTP 200 для любых
-# unknown-путей, чтобы SPA-роутер мог их перехватить вместо 404.
-# Используем именно 200.html, а не index.html, чтобы избежать конфликтов
-# с mod_dir (автоподстановка index.html для физических каталогов).
+# 200.html генерируется Nuxt'ом автоматически (копия shell-HTML).
 
 <IfModule mod_rewrite.c>
   RewriteEngine On

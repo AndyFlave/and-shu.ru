@@ -5,13 +5,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
-env:
-  REMOTE_HOST: a0435840.xsph.ru
-  REMOTE_USER: a0435840
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      REMOTE_HOST: ${{ vars.REMOTE_HOST }}
+      REMOTE_USER: ${{ vars.REMOTE_USER }}
 
     steps:
       - name: Checkout
@@ -34,6 +33,10 @@ jobs:
 
       - name: Setup SSH
         run: |
+          if [ -z "$REMOTE_HOST" ] || [ -z "$REMOTE_USER" ]; then
+            echo "::error::REMOTE_HOST/REMOTE_USER variables не заданы в Settings → Variables."
+            exit 1
+          fi
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
@@ -41,21 +44,14 @@ jobs:
           ssh-keyscan -H "$REMOTE_HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
       - name: Fetch deploy excludes from server
-        # Список того, что rsync НЕ должен трогать (поддомены, служебные папки).
-        # Лежит на сервере в ~/.deploy-excludes — позволяет добавлять новые
-        # поддомены без правки workflow. Если файла нет — деплой ОСТАНОВЛЕН
-        # для безопасности (--delete мог бы стереть чужие поддомены).
         run: |
           set -e
           ssh -i ~/.ssh/id_ed25519 "$REMOTE_USER@$REMOTE_HOST" \
             "test -f ~/.deploy-excludes" \
-            || { echo "::error::~/.deploy-excludes не найден на сервере. Создайте файл со списком исключений (см. README) и перезапустите деплой."; exit 1; }
+            || { echo "::error::~/.deploy-excludes не найден на сервере. Без него --delete может стереть чужие папки."; exit 1; }
           scp -i ~/.ssh/id_ed25519 \
             "$REMOTE_USER@$REMOTE_HOST:~/.deploy-excludes" \
             ./.deploy-excludes
-          echo "=== Excludes ==="
-          cat ./.deploy-excludes
-          echo "================"
 
       - name: Deploy via rsync
         run: |
